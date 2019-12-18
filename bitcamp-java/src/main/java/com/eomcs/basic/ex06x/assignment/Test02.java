@@ -5,10 +5,10 @@ import java.util.Scanner;
 public class Test02 {
     public static void main(String[] args) {
         
-    int width	= inputInt();
+    int width	= Console.inputInt();;
     int line = 0;
         while(line++ < width) {
-        	drawLine(line);
+        	Graphic.drawLine(line);
         	System.out.println();
         }
     	
@@ -18,21 +18,10 @@ public class Test02 {
     		line--;
     		
     		while(--line > 0) {
-    		drawLine(line);
+    		Graphic.drawLine(line);
     		System.out.println();
     		}	
 }
-    static int inputInt() {
-    	Scanner sc = new Scanner(System.in);
-    	System.out.printf("밑변길이?");
-    	int width = sc.nextInt();
-    	sc.close();
-    	return width;
-    	}
-    static void drawLine(int len) {
-    	int x =0;
-    	while(x++ < len) {
-    		System.out.print("*");
-    	}
-}
+  
+  
 }
