@@ -1,30 +1,27 @@
-// 상수 - 변수의 값을 고정하는 방법
 package com.eomcs.basic.ex04;
 
-public class Exam71 {
-    public static void main(String[] args) {
-        // 변수
-        // => 언제든지 값을 변경할 수 있다.
-        int a;
-        a = 10;
-        a = 100;
-        a = -300;
 
-        // 상수
-        // => 값을 오직 한 번만 저장할 수 있다.
-        // => 변수 앞에 final을 붙여라!
-        final int b;
-        b = 100;
 
-        // 만약 final로 선언된 변수의 값을 두 번째로 바꾸려 한다면?
-        b = 200;
-
-        // 변수와 상수를 구분하기 위해서
-        // => 상수인 경우 이름을 보통 모두 대문자로 작성한다.
-        // => 그리고 변수를 선언하는 문자에서 바로 값을 초기화시킨다.
-        final float PI = 3.14159f;
-        final float MILE = 0.621371f;
-        
-
+public class Exam71{
+	int instanceVar; //인스턴스  필드
+	static int classVar; //클래스 필드 = 스태틱 필드
+    public static void main(String[] args){
+    int local; //로컬 변수
+    int local2;
+    
     }
-}
+    
+    static void m1() {
+    	int local;
+    	//메소드 블록이 다르면 변수 다름
+    	//같은이름 변수 선언가능
+    	//다른메소드 블록에 있는 변수를 사용 할 수 없다
+    	//local2 = 100; //컴파일오류
+    	//같은 static 멤버는 가능
+    	classVar = 100;
+    }
+    void m2() {
+    	int local;
+    	classVar = 200;
+    }
+    }

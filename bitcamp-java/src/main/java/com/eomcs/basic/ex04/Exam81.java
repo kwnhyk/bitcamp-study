@@ -1,23 +1,26 @@
-// 변수의 범위 - 종류
 package com.eomcs.basic.ex04;
 
-public class Exam81 {
-    int a; // 인스턴스 변수
-    static int b; // 클래스 변수
 
-    public static void main(String[] args/*로컬변수=파라미터*/) {
-        int c; // 로컬 변수
+//변수와 블록
+public class Exam81{
+    public static void main(String[] args){
+    int a;
+    //메서드 안에 블록을 이용하여 변수의 사용 범위를 통제할 수 있다.
+    {
+    	
+    //블록 안에서 블록 밖 변수 사용 가능
+    	a = 100;
+    	int b;
+    	
+    	
     }
-}
-
-// 인스턴스 변수(instance variable)
-// - new 명령을 사용하여 인스턴스를 준비할 때 생성되는 변수
-//
-// 클래스 변수(class variable = static variable)
-// - 클래스가 로딩될 때 생성되는 변수
-//
-// 로컬 변수(local variable)
-// - 블록을 실행할 때 생성되는 변수
-// - 로컬 변수 중에서 메서드의 아규먼트를 받는 변수를
-//   "파라미터(parameter)"라 부른다.
-//   예) 위의 코드에서 main()의 args 변수가 파라미터이다.
+    if(true) {
+    	//int a =200;
+    	
+    	int b =200;
+    }
+    //b = 300;//컴파일 오류
+    }
+    
+    }
+    
