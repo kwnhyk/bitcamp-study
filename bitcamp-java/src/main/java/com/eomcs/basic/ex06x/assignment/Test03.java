@@ -1,13 +1,11 @@
 package com.eomcs.basic.ex06x.assignment;
 
-import java.util.Scanner;
-
 public class Test03 {
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
 
-		System.out.printf("밑변길이?");
-		int width = sc.nextInt();
+
+		
+		int width = Console.inputInt();
 		if(width % 2 == 0)
 			width--;
 		int spaceSize = width >>1;
@@ -16,18 +14,14 @@ public class Test03 {
 			if(line % 2 ==0) {
 				continue;
 			}
-			int count = 0;
-			while(count++ < spaceSize) {
-				System.out.print(" ");
-
-			}
+			Graphic.drawLine(spaceSize,' ');
 			spaceSize--;
-			int x =0;
-			while(x++ < line) {
-				System.out.print("*");
-			}
+
+			Graphic.drawLine(line, '*');
 			System.out.println();
 		}
-		sc.close();
+	
 	}
-}
+	
+	  
+	}

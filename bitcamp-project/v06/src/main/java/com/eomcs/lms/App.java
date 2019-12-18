@@ -26,7 +26,6 @@ public class App {
       
       System.out.print("번호?");
        no[i] = keyboard.nextInt();
-       keyboard.nextLine();
        System.out.print("수업명?");
       title[i] = keyboard.nextLine();
        System.out.print("설명?");
@@ -48,8 +47,6 @@ public class App {
        if(!response.equalsIgnoreCase("y")) {
          break;
        }
-       
-     
        System.out.println();
       }
      
