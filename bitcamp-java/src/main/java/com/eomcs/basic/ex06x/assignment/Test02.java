@@ -4,30 +4,35 @@ import java.util.Scanner;
 
 public class Test02 {
     public static void main(String[] args) {
-        Scanner keyScan = new Scanner(System.in);
-        System.out.print("가로 길이? ");
-        int len = keyScan.nextInt();
-
-        int count = 1;
-        while (count <= len) {
-            int starCnt = 1;
-            while (starCnt <= count) {
-                System.out.print("*");
-                starCnt++;
-            }
-            System.out.println();
-            count++;
+        
+    int width	= inputInt();
+    int line = 0;
+        while(line++ < width) {
+        	drawLine(line);
+        	System.out.println();
         }
-
-        count = len - 1;
-        while (count >= 1) {
-            int starCnt = 1;
-            while (starCnt <= count) {
-                System.out.print("*");
-                starCnt++;
-            }
-            System.out.println();
-            count--;
-        }
-    }
+    	
+    			
+    		
+        
+    		line--;
+    		
+    		while(--line > 0) {
+    		drawLine(line);
+    		System.out.println();
+    		}	
+}
+    static int inputInt() {
+    	Scanner sc = new Scanner(System.in);
+    	System.out.printf("밑변길이?");
+    	int width = sc.nextInt();
+    	sc.close();
+    	return width;
+    	}
+    static void drawLine(int len) {
+    	int x =0;
+    	while(x++ < len) {
+    		System.out.print("*");
+    	}
+}
 }

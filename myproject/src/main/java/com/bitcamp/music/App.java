@@ -3,26 +3,35 @@
  */
 package com.bitcamp.music;
 
+
 import java.util.Scanner;
 
 public class App {
 	
     public static void main(String[] args) {
     	Scanner keyboard = new Scanner(System.in);
-    	String name,artist,writer,genre;
-    	int date;
+    	String name,artist,writer,genre,date;
     	System.out.printf("음악제목입력:");
     	name = keyboard.nextLine();
-    	System.out.println("음악제목:"+name);
+    	System.out.printf("아티스트명:");
     	artist = keyboard.nextLine();
-    	System.out.println("아티스트:"+artist);
-    	date = keyboard.nextInt();
-    	System.out.println("발매일:");
+    	System.out.printf("작곡가명:");
     	writer = keyboard.nextLine();
-    	System.out.println("작곡:");
+    	System.out.printf("장르?:");
     	genre = keyboard.nextLine();
-    	System.out.println("장르:");
+    	System.out.printf("출시일?:");
+    	date = keyboard.nextLine();
     	
+    	
+    	System.out.println("음악제목:" + name);
+    	
+    	System.out.println("아티스트:" + artist);
+    	
+    	System.out.println("작곡:" + writer);
+    	
+    	System.out.println("장르:" + genre);
+    	System.out.println("발매일:" + date);
+    	keyboard.close();
     }
 
 }

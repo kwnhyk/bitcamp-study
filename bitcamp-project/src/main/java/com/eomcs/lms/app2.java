@@ -1,5 +1,6 @@
 package com.eomcs.lms;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
@@ -10,15 +11,14 @@ public class app2 {
     public static void main(String[] args) {
       Scanner keyboard = new Scanner(System.in);
       String no,name,email,password,photo,number;
-      SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+      SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd ");
       
       		
       Date time = new Date();
       		
       String time1 = format1.format(time);
      
-      		
-      
+     
       
       System.out.print("번호?");
        no = keyboard.nextLine();
