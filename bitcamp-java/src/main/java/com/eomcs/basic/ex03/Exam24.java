@@ -16,7 +16,7 @@ public class Exam24 {
     System.out.println(5 + (-3));
   }
 }
-
+//10111
 //## 정수를 2진수로 표현하는 방법
 //1) 부호-크기/절대값(Sign-Magnitude)
 //- 부동 소수점에서 가수부(significand or mantissa)를 저장할 때 사용한다.

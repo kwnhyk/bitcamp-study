@@ -11,7 +11,10 @@ public class Exam35 {
     System.out.println(54345.66f);
     System.out.println(11.23456f);
 
-    System.out.println(54356.66f+11.23456f);
+    System.out.println(54356.66f+11.23456f);//각각의 수는 유효자릿수이지만 계산결과는 
+  //유효자릿수를 넘어가기 떄문에 값이 구겨진다
+  //=>이렇게 작은 부동소수점인 경우도 유효자릿수를 쉽게 넘어가기 떄문에 그래서 자바는 기본으로 8바이트 
+  //메모리기본
   }
 }
 
