@@ -4,16 +4,19 @@ package com.eomcs.oop.ex01;
 //
 public class Exam0460 {
   public static void main(String[] args) {
-	  java.io.File obj3;
     // 다음 클래스는 자바에서 기본으로 제공하는 클래스이다.
     // 패키지명을 명시하지 않아도 컴파일 오류가 발생하지 않는다.
-    Integer obj1;
-    System obj2;
+    java.lang.Integer obj1;
+    java.lang.System obj2;
+    java.io.File obj3; // 컴파일 오류!
 
+    
+    Integer obj4;
+    System obj5;
+    // File obj6; // 컴파일 오류!
     // 다음 클래스도 자바에서 기본으로 제공하는 클래스이다.
     // 그런데 위의 클래스들과 달리 패키지명을 명시하지 않으면 
     // 컴파일 오류가 발생한다.
-    File obj3; // 컴파일 오류!
   }
 }
 

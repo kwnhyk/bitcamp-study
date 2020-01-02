@@ -16,7 +16,7 @@ public class Exam0110 {
     name = "홍길동";
     kor = 100;
     eng = 90;
-    math = 85;
+    math = 80;
     sum = kor + eng + math;
     aver = sum / 3;
 
