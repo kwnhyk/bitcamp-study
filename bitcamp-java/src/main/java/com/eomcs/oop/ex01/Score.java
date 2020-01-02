@@ -8,11 +8,11 @@ package com.eomcs.oop.ex01;
 //   main() {} 블록 안에서만 사용할 수 있다.
 // - 이렇게 별도의 파일로 정의 클래스는 
 //   다른 클래스에서도 사용할 수 있다.
-public class Score {
+public class Score { 
   public String name;
-  public int kor;
+  public int kor; 
   public int eng;
   public int math;
   public int sum;
   public float aver;
-}
+} 
