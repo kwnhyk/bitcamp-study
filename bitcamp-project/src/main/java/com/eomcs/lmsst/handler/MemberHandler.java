@@ -7,45 +7,48 @@ import com.eomcs.lmsst.domain.Member;
 
 public class MemberHandler {
   
+  MemberList memberList;
   
-  static final int MEMBER_SIZE = 100;
-  Member[] members = new Member[MEMBER_SIZE];
-   int memberCount = 0;
- public  static Scanner keyboard;
-  
-  public static void listMember(MemberHandler memberHandler) {
-    for (int i = 0; i < memberHandler.memberCount; i++) {
-      Member m = memberHandler.members[i];
+ 
+ public   Scanner input;
+ public MemberHandler(Scanner input) {
+	  this.input = input;
+	  memberList = new MemberList();
+	  
+ }
+  public  void listMember() {
+	 Member[] members = memberList.toArray();
+    for (Member m : members) {
+ 
       System.out.printf("%d, %s, %s, %s, %s\n", 
-          m.no, m.name, m.email, m.tel, m.registeredDate);
+          m.getNo(), m.getName(), m.getEmail(), m.getTel(), m.getRegisteredDate());
     }
   }
 
- public static void addMember(MemberHandler memberHandler) {
+ public  void addMember() {
     Member member = new Member();
 
     System.out.print("번호? ");
-    member.no = keyboard.nextInt();
-    keyboard.nextLine(); // 줄바꿈 기호 제거용
+    member.setNo(input.nextInt());
+    input.nextLine(); // 줄바꿈 기호 제거용
 
     System.out.print("이름? ");
-    member.name = keyboard.nextLine();
+    member.setName(input.nextLine());
 
     System.out.print("이메일? ");
-    member.email = keyboard.nextLine();
+    member.setEmail(input.nextLine());
 
     System.out.print("암호? ");
-    member.password = keyboard.nextLine();
+    member.setPassword(input.nextLine());
 
     System.out.print("사진? ");
-    member.photo = keyboard.nextLine();
+    member.setPhoto(input.nextLine());
 
     System.out.print("전화? ");
-    member.tel = keyboard.nextLine();
+    member.setTel(input.nextLine());
 
-    member.registeredDate = new Date(System.currentTimeMillis());
-    
-    memberHandler.members[memberHandler.memberCount++] = member;
+    member.setRegisteredDate(new Date(System.currentTimeMillis()));
+    memberList.add(member);
     System.out.println("저장하였습니다.");
   }
 }

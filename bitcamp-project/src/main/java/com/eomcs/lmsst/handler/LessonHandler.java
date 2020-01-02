@@ -6,49 +6,53 @@ import java.util.Scanner;
 import com.eomcs.lmsst.domain.Lesson;
 
 public class LessonHandler {
+  LessonList lessonList;
   
-  static final int LESSON_SIZE = 100;
-   Lesson[] lessons = new Lesson[LESSON_SIZE];
-   int lessonCount = 0;
+
   
-  public static Scanner keyboard;
-  
-  public static void addLesson(LessonHandler lessonHandler) {
+  public  Scanner input;
+  public LessonHandler(Scanner input) {
+	  this.input = input;
+	  lessonList = new LessonList();
+	  
+  }
+  public  void addLesson() {
     Lesson lesson = new Lesson();
     
     System.out.print("번호? ");
-    lesson.no = keyboard.nextInt();
+    lesson.setNo(input.nextInt());
 
-    keyboard.nextLine(); 
+    input.nextLine(); 
 
     System.out.print("수업명? ");
-    lesson.title = keyboard.nextLine();
+    lesson.setTitle(input.nextLine());
 
     System.out.print("설명? ");
-    lesson.description = keyboard.nextLine();
+    lesson.setDescription(input.nextLine());
 
     System.out.print("시작일? ");
-    lesson.startDate = Date.valueOf(keyboard.next());
+    lesson.setStartDate(Date.valueOf(input.next()));
 
     System.out.print("종료일? ");
-    lesson.endDate = Date.valueOf(keyboard.next());
+    lesson.setEndDate(Date.valueOf(input.next()));
 
     System.out.print("총수업시간? ");
-    lesson.totalHours = keyboard.nextInt();
+    lesson.setTotalHours(input.nextInt());
 
     System.out.print("일수업시간? ");
-    lesson.dayHours = keyboard.nextInt();
-    keyboard.nextLine(); 
-    
-    lessonHandler.lessons[lessonHandler.lessonCount++] = lesson;
+    lesson.setDayHours(input.nextInt());
+    input.nextLine(); 
+   lessonList.add(lesson);
     System.out.println("저장하였습니다.");
   }
   
-  public static void listLesson(LessonHandler lessonHandler) {
-    for (int i = 0; i < lessonHandler.lessonCount; i++) {
-      Lesson l = lessonHandler.lessons[i];
+  public  void listLesson() {
+	  
+	 Lesson[] lessons = lessonList.toArray();
+    for (Lesson l : lessons) {
+     
       System.out.printf("%d, %s, %s ~ %s, %d\n",
-          l.no, l.title, l.startDate, l.endDate, l.totalHours);
+          l.getNo(), l.getTitle(), l.getStartDate(), l.getEndDate(), l.getTotalHours());
     }
   }
   
