@@ -60,20 +60,16 @@ public class LessonHandler {
 		}
 	}
 	public void detailLesson() {
-		System.out.print("수업 번호? ");
-		int no = input.nextInt();
+		System.out.print("게시글 인덱스? ");
+		int index = input.nextInt();
 		input.nextLine(); // 숫자 뒤의 남은 공백 제거
 
-		int index =indexOfLesson(no);
-		   
-		  
-	    if(index==-1) {
-	    	 System.out.println("해당 번호의 수업이 없습니다.");  
-	         return;
-	    }
-	    
-	    Lesson lesson =this.lessonList.get(index);
+		Lesson lesson = this.lessonList.get(index);
 
+		if (lesson == null) {
+			System.out.println("수업 인덱스가 유효하지 않습니다.");
+			return;
+		}
 
 		System.out.printf("번호: %d\n", lesson.getNo());
 		System.out.printf("수업명: %s\n", lesson.getTitle());
@@ -90,22 +86,16 @@ public class LessonHandler {
 
 	}
 	public void updateLesson() {
-		System.out.print("수업 번호? ");		
-		int no = input.nextInt();
+		System.out.print("게시글 인덱스? ");		
+		int index = input.nextInt();
 		input.nextLine(); // 숫자 뒤의 남은 공백 제거
 
-		int index =indexOfLesson(no);
-		   
-		  
-	    if(index==-1) {
-	    	 System.out.println("해당 번호의 수업이 없습니다.");  
-	         return;
-	    }
-	    
-	    Lesson oldLesson =this.lessonList.get(index);
+		Lesson oldLesson = this.lessonList.get(index);
 
-
-		
+		if (oldLesson == null) {
+			System.out.println("게시글 인덱스가 유효하지 않습니다.");
+			return;
+		}
 		String inputStr = null;
 		boolean changed=false;
 		Lesson newLesson = new Lesson();
@@ -132,28 +122,26 @@ public class LessonHandler {
 		}	else {
 				newLesson.setStartDate(Date.valueOf(inputStr));
 			}
-		
-		System.out.printf("종료일(%s)?",oldLesson.getEndDate());
+		newLesson.setStartDate( Date.valueOf(input.next()));
+		System.out.printf("종료일?%s \n",oldLesson.getEndDate());
 		inputStr = input.nextLine();
 		if(inputStr.equals("")) {
 			newLesson.setEndDate(oldLesson.getEndDate());
 		}	else {
 				newLesson.setEndDate(Date.valueOf(inputStr));
 			}
-		
-		System.out.printf("총수업시간( %d)?",oldLesson.getTotalHours());
+		newLesson.setEndDate( Date.valueOf(input.next()));
+		System.out.printf("총수업시간? %d\n",oldLesson.getTotalHours());
 		inputStr = input.nextLine();
 		if(inputStr.length()==0) {
 			newLesson.setTotalHours(oldLesson.getTotalHours());
 		}	else {
 				newLesson.setTotalHours(Integer.parseInt(inputStr));
 			}
-		
-		System.out.printf("일수업시간(%d)?",oldLesson.getDayHours());
-		inputStr = input.nextLine();
+		System.out.printf("일수업시간? %d\n",oldLesson.getDayHours());
 		if(inputStr.length()==0) {
 			newLesson.setDayHours(oldLesson.getDayHours());
-		}	else{
+		}	else {
 				newLesson.setDayHours(Integer.parseInt(inputStr));
 			}
 		
@@ -175,32 +163,20 @@ public class LessonHandler {
 
 	
 	public void deleteLesson() {
-		System.out.print("수업 번호? ");
-		int no = input.nextInt();
+		System.out.print("게시글 인덱스? ");
+		int index = input.nextInt();
 		input.nextLine(); // 숫자 뒤의 남은 공백 제거
 
-		int index =indexOfLesson(no);
-		   
-		  
-	    if(index==-1) {
-	    	 System.out.println("해당 번호의 수업이 없습니다.");  
-	         return;
-	    }
-	    
+		Lesson lesson = this.lessonList.get(index);
 
-		
+		if (lesson == null) {
+			System.out.println("게시글 인덱스가 유효하지 않습니다.");
+			return;
+		}
 
 		this.lessonList.remove(index);
 
-		System.out.println("수업을 삭제했습니다.");
-	}
-	private int indexOfLesson(int no) {
-		  for(int i = 0; i <this.lessonList.size(); i++) {
-			  if(this.lessonList.get(i).getNo() == no) {
-				  return i;
-			  }
-		  }
-		  return -1;
+		System.out.println("게시글을 삭제했습니다.");
 	}
 
 }

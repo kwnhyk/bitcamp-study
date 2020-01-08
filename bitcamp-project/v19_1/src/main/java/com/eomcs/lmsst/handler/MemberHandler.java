@@ -57,16 +57,15 @@ public class MemberHandler {
     System.out.println("저장하였습니다.");
   }
   public void updateMember() {
-		System.out.print("멤버 번호? ");		
-		int no = input.nextInt();
+		System.out.print("멤버 인덱스? ");		
+		int index = input.nextInt();
 		input.nextLine(); // 숫자 뒤의 남은 공백 제거
-		int index = indexOfMember(no);
-		if (index == -1) {
+
+		Member oldMember = this.memberList.get(index);
+		if (oldMember == null) {
 			System.out.println("멤버 인덱스가 유효하지 않습니다.");
 			return;
 		}
-		
-		Member oldMember = this.memberList.get(index);
 		String inputStr = null;
 		boolean changed=false;
 		Member newMember = new Member();
@@ -110,39 +109,34 @@ public class MemberHandler {
   }
   
   public void deleteMember() {
-    System.out.print("회원 번호? ");
-    int no = input.nextInt();
+    System.out.print("게시글 인덱스? ");
+    int index = input.nextInt();
     input.nextLine(); // 숫자 뒤의 남은 공백 제거
-    int index = indexOfMember(no);
     
+    Member Member = this.memberList.get(index);
     
-    if (index == -1) {
-      System.out.println("회원 번호가 유효하지 않습니다.");
+    if (Member == null) {
+      System.out.println("게시글 인덱스가 유효하지 않습니다.");
       return;
     }
     
     this.memberList.remove(index);
     
-    System.out.println("회원 삭제했습니다.");
+    System.out.println("게시글을 삭제했습니다.");
   }
 
 
 public void detailMember() {
-  System.out.print("회원 번호? ");
-  int no = input.nextInt();
+  System.out.print("게시글 인덱스? ");
+  int index = input.nextInt();
   input.nextLine(); // 숫자 뒤의 남은 공백 제거
   
-  
-  int index =indexOfMember(no);
-  
-  
-  if(index==-1) {
-  	 System.out.println("해당 번호의 회원이 없습니다.");  
-       return;
-  }
   Member member = this.memberList.get(index);
   
-  
+  if (member == null) {
+    System.out.println("수업 인덱스가 유효하지 않습니다.");
+    return;
+  }
   
   System.out.printf("번호: %d\n", member.getNo());
   System.out.printf("이름 %s\n",member.getName());
@@ -156,13 +150,5 @@ public void detailMember() {
 
 
 
-}
-private int indexOfMember(int no) {
-	  for(int i = 0; i <this.memberList.size(); i++) {
-		  if(this.memberList.get(i).getNo() == no) {
-			  return i;
-		  }
-	  }
-	  return -1;
 }
 }
