@@ -1,0 +1,39 @@
+package com.eomcs.lmsst.util;
+
+import java.util.Arrays;
+
+public class Stack {
+private static final int DEFAULT_CAPACITY =10;
+	
+	Object[] elementDate;  
+	int size;
+	
+	
+	public Stack() {
+		this.elementDate = new Object[DEFAULT_CAPACITY];
+		this.size = 0;
+		
+	}
+	public void push(Object value) {
+		if(this.size == elementDate.length) {
+		/*	int oldCapacity = elementDate.length;
+			int newCapacity = oldCapacity +(oldCapacity >>1);
+			this.elementDate = Arrays.copyOf(elementDate, newCapacity);*/
+			grow();
+		}
+		this.elementDate[size++] = value;
+		
+	}
+	//배열크기를 늘리는 코드를 별도의 메서드grow()로 분리(리팩토링)
+	private void grow() {
+		
+	
+		this.elementDate = Arrays.copyOf(elementDate, newCapacity());
+	}
+	//배열크기 계산 메소드 따로 분리 (리팩토링)
+	private int newCapacity() {
+		int oldCapacity = elementDate.length;
+	return  oldCapacity +(oldCapacity >>1);
+	}
+	
+}

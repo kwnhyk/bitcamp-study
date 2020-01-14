@@ -1,0 +1,26 @@
+package com.eomcs.lmsst.util;
+
+import java.util.Arrays;
+
+public class Stack {
+private static final int DEFAULT_CAPACITY =10;
+	
+	Object[] elementDate;  
+	int size;
+	
+	
+	public Stack() {
+		this.elementDate = new Object[DEFAULT_CAPACITY];
+		this.size = 0;
+		
+	}
+	public void push(Object value) {
+		if(this.size == elementDate.length) {
+			int oldCapacity = elementDate.length;
+			int newCapacity = oldCapacity +(oldCapacity >>1);
+			this.elementDate = Arrays.copyOf(elementDate, newCapacity);
+		}
+		this.elementDate[size++] = value;
+		
+	}
+}
