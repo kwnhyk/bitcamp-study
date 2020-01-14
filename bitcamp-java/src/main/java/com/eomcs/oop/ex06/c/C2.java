@@ -17,8 +17,8 @@ public class C2 extends C {
     
     // 다음은 전형적인 오버라이딩의 예이다.
     /*
-    @Override protected void m2() {} // OK
-    @Override void m3() {} // OK
+    @Override void m2() {} // OK
+    @Override protected void m3() {} // OK
     @Override public void m4() {} // OK
     */
     

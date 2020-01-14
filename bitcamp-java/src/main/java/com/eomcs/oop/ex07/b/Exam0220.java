@@ -1,6 +1,8 @@
 // 캡슐화(encapsulation) - 응용
 package com.eomcs.oop.ex07.b;
 
+import java.util.Calendar;
+
 import com.eomcs.oop.ex07.b.sub.C;
 
 public class Exam0220 extends C {
@@ -16,7 +18,7 @@ public class Exam0220 extends C {
         Car c2 = Car.create("티코");
         System.out.printf("%s,%s,%d,%d\n", 
                 c2.model, c2.maker, c2.cc, c2.valve);
-        
+        Calendar obj =  Calendar.getInstance();
     }
 }
 
