@@ -1,8 +1,6 @@
-package com.eomcs.lmsst.util.LinkedList;
+package com.eomcs.util;
 
 import java.lang.reflect.Array;
-
-import com.eomcs.lmsst.util.AbstractList;
 
 public class LinkedList<E> extends AbstractList<E> {
   
@@ -137,5 +135,4 @@ public class LinkedList<E> extends AbstractList<E> {
     T value;
     Node<T> next;
   }
-
 }

@@ -1,6 +1,4 @@
-package com.eomcs.lmsst.util;
-
-import com.eomcs.lmsst.util.LinkedList.LinkedList;
+package com.eomcs.util;
 
 public class Queue<E> extends LinkedList<E> implements Cloneable {
   
@@ -53,9 +51,6 @@ public class Queue<E> extends LinkedList<E> implements Cloneable {
     }
     return temp;
   }
-  public Iterator<E> iterator(){
-	  return new QueueIterator<>(this) ;
-			  }
 }
 
 

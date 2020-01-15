@@ -1,30 +1,29 @@
 package com.eomcs.lmsst.handler;
 
 import java.sql.Date;
+
 import com.eomcs.lmsst.domain.Board;
-import com.eomcs.lmsst.util.AbstractList;
+import com.eomcs.lmsst.util.Iterator;
+import com.eomcs.lmsst.util.List;
 import com.eomcs.lmsst.util.Prompt;
 
 public class BoardHandler {
   
-  AbstractList<Board> boardList;
+  List<Board> boardList;
   Prompt prompt;
   
   
-  public BoardHandler(Prompt prompt,AbstractList<Board> list) {
+  public BoardHandler(Prompt prompt,List<Board> list) {
     this.prompt = prompt;
     this.boardList = list;
   }
   
   
   public void listBoard() {
-    // BoardList의 보관된 값을 받을 배열을 준비한다. 
-    Board[] arr = new Board[this.boardList.size()];
-
-    // toArray()에게 빈 배열을 넘겨서 복사 받는다.
-    this.boardList.toArray(arr);
-    
-    for (Board b : arr) {
+    // BoardList 에게 값을 꺼내는 일을 해줄 Iterator 객체를 달라고 한다 
+	  Iterator<Board> iterator = boardList.iterator();
+    while(iterator.hasNext()) {
+    Board b = iterator.next();
       System.out.printf("%d, %s, %s, %d\n", 
           b.getNo(), b.getTitle(), b.getDate(), b.getViewCount());
     }

@@ -1,17 +1,24 @@
-package com.eomcs.lmsst.handler;
+package com.eomcs.lms.handler;
 
 import java.sql.Date;
-import com.eomcs.lmsst.domain.Member;
-import com.eomcs.lmsst.util.List;
-import com.eomcs.lmsst.util.Prompt;
+import com.eomcs.lms.domain.Member;
+import com.eomcs.util.List;
+import com.eomcs.util.Prompt;
 
 public class MemberHandler {
   
+  // 목록을 다루는 객체를 지정할 때,
+  // => 특정 클래스(예: AbstractList, LinkedList, ArrayList)를 지정하는 대신에,
+  // => 사용 규칙(예: List)을 지정함으로써 
+  // 더 다양한 타입의 객체로 교체할 수 있게 만든다.
+  // => List 사용 규칙을 구현한 객체라면 어떤 클래스의 객체든지 사용할 수 있다.
+  // 결국 유지보수를 더 유연하게 하기 위함이다.
   List<Member> memberList;
 
   Prompt prompt;
 
-  public MemberHandler(Prompt prompt,List<Member>list) {
+  public MemberHandler(Prompt prompt, List<Member> list) {
+    // list 파라미터는 List 인터페이스를 구현한 객체를 받는다.
     this.prompt = prompt;
     this.memberList = list;
   }

@@ -1,8 +1,6 @@
-package com.eomcs.lmsst.util.Stack;
+package com.eomcs.util;
 
 import java.util.Arrays;
-
-import com.eomcs.lmsst.util.Iterator;
 
 public class Stack<E> implements Cloneable {
   
@@ -106,29 +104,8 @@ public class Stack<E> implements Cloneable {
       return null;
     }
   }
-  public Iterator<E> iterator(){
-	  return new Iterator<E>() {
-	  
-
-
-		Stack<E> stack = Stack.this.clone();
-
-		
-			
-	
-		@Override
-		public boolean hasNext() {
-			return !stack.empty();
-		}
-		@Override
-		public E next() {
-			return stack.pop();
-		} 
-
-
-  };
 }
-}
+
 
 
 

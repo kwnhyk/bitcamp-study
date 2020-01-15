@@ -1,4 +1,4 @@
-package com.eomcs.lmsst.util;
+package com.eomcs.util;
 
 import java.util.Arrays;
 
@@ -20,7 +20,9 @@ public class ArrayList<E> extends AbstractList<E> {
     }
   }
   
- // @Override 추상메서드라서 안써도돼
+  // 추상 메서드를 구현할 때, 
+  // 다음과 같이 @Override 애노테이션을 붙이지 않아도 문법 검사가 이루어지기 때문에 편하다.
+  //@Override
   public void add(E e) {
     if (this.size == this.elementData.length) {
       grow();
@@ -115,8 +117,6 @@ public class ArrayList<E> extends AbstractList<E> {
     int oldSize = this.elementData.length;
     return oldSize + (oldSize >> 1);
   }
-  
-
 }
 
 

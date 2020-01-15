@@ -12,6 +12,7 @@ import com.eomcs.lmsst.util.Queue;
 import com.eomcs.lmsst.util.LinkedList.LinkedList;
 import com.eomcs.lmsst.util.Stack.Stack;
 import com.eomcs.lmsst.util.ArrayList;
+import com.eomcs.lmsst.util.Iterator;
 
 public class App {
 	static Scanner keyboard = new Scanner(System.in);
@@ -87,10 +88,10 @@ public class App {
 				boardHandler1.deleteBoard();
 				break;
 			case "history":
-				printCommandHistory();
+				printCommandHistory(commandStack.iterator());
 				break;
 			case "history2":
-				printCommandHistory2();
+				printCommandHistory(commandQueue.iterator());
 			default:
 				if (!command.equalsIgnoreCase("quit")) {
 					System.out.println("실행할 수 없는 명령입니다.");
@@ -103,28 +104,18 @@ public class App {
 
 		keyboard.close();
 	}
-	private static void printCommandHistory2() {
-		Queue<String> historyQueue = commandQueue.clone();
+	
+
+	
+	//이전에는  Stack에서 값을 꺼내는 방법과 Queue에서 값을 꺼내는 방법이 다르기 때문에
+	//printCommandHistory()와 printCommandHistory2() 메서드를 따로 정의했다.
+	//이제 Stack과 Queue는 일관된 방식으로 값을 꺼내주는 Iterator가 있기 때문에
+	//두 메서드를 하나로 합칠 수 있다.
+	
+	private static void printCommandHistory(Iterator<String> iterator) {
 		int count =0;
-		while(historyQueue.size()>0) {
-			System.out.println(historyQueue.poll());
-			if((++count % 5)== 0) {
-				System.out.print(":");
-				String str = keyboard.nextLine();
-				if(str.equalsIgnoreCase("q")) {
-					break;
-				}
-
-			}
-
-
-		}
-	}
-	private static void printCommandHistory() {
-		Stack<String> historyStack = commandStack.clone();
-		int count =0;
-		while (!historyStack.empty()) {
-			System.out.println(historyStack.pop());
+		while (iterator.hasNext()) {
+			System.out.println(iterator.next());
 
 			count++;
 			if((count % 5)== 0) {
