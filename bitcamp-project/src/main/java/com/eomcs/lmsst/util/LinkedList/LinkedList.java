@@ -1,8 +1,7 @@
 package com.eomcs.lmsst.util.LinkedList;
 
 import java.lang.reflect.Array;
-
-import com.eomcs.lmsst.util.AbstractList;
+import java.util.AbstractList;
 
 public class LinkedList<E> extends AbstractList<E> {
   

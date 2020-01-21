@@ -1,23 +1,38 @@
 package com.eomcs.lmsst;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 import com.eomcs.lmsst.domain.Board;
 import com.eomcs.lmsst.domain.Lesson;
 import com.eomcs.lmsst.domain.Member;
-import com.eomcs.lmsst.handler.BoardHandler;
-import com.eomcs.lmsst.handler.LessonHandler;
-import com.eomcs.lmsst.handler.MemberHandler;
-import com.eomcs.lmsst.util.ArrayList;
-import com.eomcs.lmsst.util.Iterator;
+import com.eomcs.lmsst.handler.BoardAddCommand;
+import com.eomcs.lmsst.handler.BoardDeleteCommand;
+import com.eomcs.lmsst.handler.BoardDetailCommand;
+import com.eomcs.lmsst.handler.BoardListCommand;
+import com.eomcs.lmsst.handler.BoardUpdateCommand;
+import com.eomcs.lmsst.handler.Command;
+import com.eomcs.lmsst.handler.LessonAddCommand;
+import com.eomcs.lmsst.handler.LessonDeleteCommand;
+import com.eomcs.lmsst.handler.LessonDetailCommand;
+import com.eomcs.lmsst.handler.LessonListCommand;
+import com.eomcs.lmsst.handler.LessonUpdateCommand;
+import com.eomcs.lmsst.handler.MemberAddCommand;
+import com.eomcs.lmsst.handler.MemberDeleteCommand;
+import com.eomcs.lmsst.handler.MemberDetailCommand;
+import com.eomcs.lmsst.handler.MemberListCommand;
+import com.eomcs.lmsst.handler.MemberUpdateCommand;
 import com.eomcs.lmsst.util.Prompt;
-import com.eomcs.lmsst.util.Queue;
-import com.eomcs.lmsst.util.LinkedList.LinkedList;
-import com.eomcs.lmsst.util.Stack.Stack;
 
 public class App {
 	static Scanner keyboard = new Scanner(System.in);
-	static  Stack<String> commandStack = new Stack<>();
-	static Queue<String> commandQueue = new Queue<>();
+	static  Deque<String> commandStack = new ArrayDeque<>();
+	static Queue<String> commandQueue = new LinkedList<>();
 
 
 	public static void main(String[] args) {
@@ -33,77 +48,64 @@ public class App {
 		 =>이런 류의 클래스는 직접 인스턴스를 생성하지 못하도록 해서 직접 사용하는 것을 
 		막아야한다
 		이런 용도로 사용하는 문법이 "추상클래스(abstract class)"이다.*/
+		HashMap<String,Command> commandMap = new HashMap<>();
 		LinkedList<Board> boardList = new LinkedList<>();
-		BoardHandler boardHandler1 = new BoardHandler(prompt, boardList);
-		ArrayList<Lesson> lessonList = new ArrayList<>();
-		LessonHandler lessonHandler1 = new LessonHandler(prompt,lessonList);
-		LinkedList<Member> memberList = new LinkedList<>();
-		MemberHandler memberHandler1 = new MemberHandler(prompt,memberList);
+		commandMap.put("/board/add", new BoardAddCommand(prompt,boardList));
+		
+		commandMap.put("/board/list", new BoardListCommand(boardList));
+		//Command boardDetailCommand = new BoardDetailCommand(prompt, boardList);
+		 commandMap.put("/board/detail", new BoardDetailCommand(prompt, boardList));
+		    commandMap.put("/board/update", new BoardUpdateCommand(prompt, boardList));
+		    commandMap.put("/board/delete", new BoardDeleteCommand(prompt, boardList));
+
+		    ArrayList<Lesson> lessonList = new ArrayList<>();
+		    commandMap.put("/lesson/add", new LessonAddCommand(prompt, lessonList));
+		    commandMap.put("/lesson/list", new LessonListCommand(lessonList));
+		    commandMap.put("/lesson/detail", new LessonDetailCommand(prompt, lessonList));
+		    commandMap.put("/lesson/update", new LessonUpdateCommand(prompt, lessonList));
+		    commandMap.put("/lesson/delete", new LessonDeleteCommand(prompt, lessonList));
+
+		    LinkedList<Member> memberList = new LinkedList<>();
+		    commandMap.put("/member/add", new MemberAddCommand(prompt, memberList));
+		    commandMap.put("/member/list", new MemberListCommand(memberList));
+		    commandMap.put("/member/detail", new MemberDetailCommand(prompt, memberList));
+		    commandMap.put("/member/update", new MemberUpdateCommand(prompt, memberList));
+		    commandMap.put("/member/delete", new MemberDeleteCommand(prompt, memberList));
 
 		String command;
 
-		do {
+		while(true){
 			System.out.print("\n명령> ");
 			command = keyboard.nextLine();
 			if(command.length()==0)
 				continue;
+			if(command.equals("quit")) {
+				System.out.println("안녕!");
+				break;
+			}else if(command.equals("history")) {
+				printCommandHistory(commandStack.iterator());
+				continue;
+			}else if(command.equals("history2")) {
+				printCommandHistory(commandQueue.iterator());
+				continue;
+			}
+		
+		
+			
 			
 			commandStack.push(command);
 			commandQueue.offer(command);
-			switch (command) {
-			case "/lesson/add":
-				// 다른 클래스로 분리한 메서드를 호출할 때는
-				// 클래스를 이름을 지정해야 한다.
-				lessonHandler1.addLesson();
-				break;
-			case "/lesson/list":
-				lessonHandler1.listLesson();
-				break;
-			case "/member/add":
-				memberHandler1.addMember();
-				break;
-			case "/lesson/detail":
-				lessonHandler1.detailLesson();
-				break;
-			case "/lesson/update":
-				lessonHandler1.updateLesson();
-				break;
-			case "/lesson/delete":
-				lessonHandler1.deleteLesson();
-				break;
-			case "/member/list":
-				memberHandler1.listMember();
-
-				break;
-			case "/board/add":
-				boardHandler1.addBoard();
-				break;
-			case "/board/list":
-				boardHandler1.listBoard();
-				break;
-			case "/board/detail":
-				boardHandler1.detailBoard();
-				break;
-			case "/board/update":
-				boardHandler1.updateBoard();
-				break;
-			case "/board/delete":
-				boardHandler1.deleteBoard();
-				break;
-			case "history":
-				printCommandHistory(commandStack.iterator());
-				break;
-			case "history2":
-				printCommandHistory(commandQueue.iterator());
-			default:
-				if (!command.equalsIgnoreCase("quit")) {
+			Command commandHandler = commandMap.get(command);
+				if (commandHandler !=null) {
+					commandHandler.execute();
+				}else {
 					System.out.println("실행할 수 없는 명령입니다.");
 				}
-			}
+			
 
-		} while (!command.equalsIgnoreCase("quit"));
+		} 
 
-		System.out.println("안녕!");
+		
 
 		keyboard.close();
 	}
