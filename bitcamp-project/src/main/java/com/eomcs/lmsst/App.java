@@ -17,6 +17,8 @@ import com.eomcs.lmsst.handler.BoardDetailCommand;
 import com.eomcs.lmsst.handler.BoardListCommand;
 import com.eomcs.lmsst.handler.BoardUpdateCommand;
 import com.eomcs.lmsst.handler.Command;
+import com.eomcs.lmsst.handler.ComputePlusCommand;
+import com.eomcs.lmsst.handler.HelloCommand;
 import com.eomcs.lmsst.handler.LessonAddCommand;
 import com.eomcs.lmsst.handler.LessonDeleteCommand;
 import com.eomcs.lmsst.handler.LessonDetailCommand;
@@ -71,7 +73,8 @@ public class App {
 		    commandMap.put("/member/detail", new MemberDetailCommand(prompt, memberList));
 		    commandMap.put("/member/update", new MemberUpdateCommand(prompt, memberList));
 		    commandMap.put("/member/delete", new MemberDeleteCommand(prompt, memberList));
-
+		    commandMap.put("/hello", new HelloCommand(prompt));
+		    commandMap.put("/compute/plus", new ComputePlusCommand(prompt));
 		String command;
 
 		while(true){
