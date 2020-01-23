@@ -10,9 +10,9 @@ public  class Board {
 	private Date date;
 	private int viewCount;
 	private String writer;
-	
-	
-	
+
+
+
 	public static Board valueOf(String csv) {
 		String[] data = csv.split(",");
 
@@ -20,14 +20,21 @@ public  class Board {
 		board.setNo(Integer.parseInt(data[0]));
 		board.setTitle(data[1]);
 		board.setDate(Date.valueOf(data[2]));
-        board.setViewCount(Integer.parseInt(data[3]));
-        board.setWriter((data[4]));
-        return board;
-		
+		board.setViewCount(Integer.parseInt(data[3]));
+		board.setWriter((data[4]));
+		return board;
+
 	}
 	public String toCsvString() {
-		return String.format("%d,%s,%s,%d,%s",this.getNo(),this.getTitle()
-				,this.getWriter(),this.getViewCount(),this.getDate());
+
+		return String.format("%d,%s,%s,%d,%s", 
+				this.getNo(), 
+				this.getTitle(), 
+				this.getDate(),
+				this.getViewCount(), 
+				this.getWriter());
+
+
 	}
 	public int getNo() {
 		return no;
@@ -100,6 +107,6 @@ public  class Board {
 			return false;
 		return true;
 	}
-	
-    
-  }
+
+
+}

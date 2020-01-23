@@ -5,12 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -43,10 +41,10 @@ public class App {
 	static  Deque<String> commandStack = new ArrayDeque<>();
 	static Queue<String> commandQueue = new LinkedList<>();
 
-	static List<Lesson> lessonList = new ArrayList<>();
-	static List<Board> boardList = new LinkedList<>();
+	static ArrayList<Lesson> lessonList = new ArrayList<>();
+	static LinkedList<Board> boardList = new LinkedList<>();
 
-	static List<Member> memberList = new LinkedList<>();
+	static LinkedList<Member> memberList = new LinkedList<>();
 	public static void main(String[] args) {
 		loadLessonData();
 		loadMemberData();
@@ -155,15 +153,15 @@ public class App {
 	}
 	private static void loadLessonData() {
 		File file = new File("./lesson.json");
+		FileReader in = null;
 	//	Scanner dataScan = null;
 
-		try (FileReader in = new FileReader(file)){
-			
-			lessonList.addAll(Arrays.asList(new Gson().fromJson(in,Lesson[].class)));
-			
-			
-			
-			
+		try {
+			in = new FileReader(file);
+			Lesson[] lessons = new Gson().fromJson(in,Lesson[].class);
+			for(Lesson lesson : lessons){
+				lessonList.add(lesson);
+			}
 			/*
 			dataScan = new Scanner(in);
 			int count = 0;
@@ -180,13 +178,25 @@ public class App {
 			*/
 			System.out.printf("총 %d개의 수업 데이터를 로딩했습니다\n",lessonList.size());
 
-	
 
 
-		}catch(IOException e) {
+
+		}catch(Exception e) {
 			System.out.println("파일 읽기 중 오류 발생!-" + e.getMessage());
 
-		
+		}finally {
+/*
+			try {
+				dataScan.close();
+			}catch(Exception e) {
+
+			}*/
+			try {
+				in.close();
+
+			}catch(Exception e) {
+
+			}
 		}
 
 	}
@@ -220,12 +230,14 @@ public class App {
 	}
 	private static void loadMemberData() {
 		File file = new File("./member.json");
-		
+		FileReader in = null;
 
-		try (FileReader in = new FileReader(file)){
-		
-			memberList.addAll(Arrays.asList(new Gson().fromJson(in,Member[].class)));		
-		
+		try {
+			in = new FileReader(file);
+			Board[] boards = new Gson().fromJson(in,Board[].class);		
+			for(Board board :boards){
+				boardList.add(board);
+						}
 						/*
 			int count = 0;
 			while(true) {
@@ -249,8 +261,21 @@ public class App {
 		}catch(Exception e) {
 			System.out.println("파일 읽기 중 오류 발생!-" + e.getMessage());
 
-	
-		
+		}finally {
+
+			/*
+			try {
+				dataScan.close();
+			}catch(Exception e) {
+
+			}
+			*/
+			try {
+				in.close();
+
+			}catch(Exception e) {
+
+			}
 		}
 	}
 	private static void saveMemberData() {
@@ -281,10 +306,14 @@ public class App {
 	}
 	private static void loadBoardData() {
 		File file = new File("./board.json");
+		FileReader in = null;
 
-		try (FileReader in = new FileReader(file)){
-			boardList.addAll(Arrays.asList(new Gson().fromJson(in, Board[].class)));
-				
+		try {
+			in = new FileReader(file);
+				Board[] boards = new Gson().fromJson(in, Board[].class);
+				for(Board board : boards) {
+					boardList.add(board);
+				}
 					
 				
 				
@@ -297,7 +326,16 @@ public class App {
 		}catch(Exception e) {
 			System.out.println("파일 읽기 중 오류 발생!-" + e.getMessage());
 
-		}
+		}finally {
+
+			
+			}
+			try {
+				in.close();
+
+			}catch(Exception e) {
+
+			}
 		}
 
 	

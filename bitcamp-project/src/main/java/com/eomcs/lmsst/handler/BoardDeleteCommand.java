@@ -19,7 +19,6 @@ public class BoardDeleteCommand implements Command {
 	  
 	  @Override
 	public void execute() {
-		    System.out.print("번호? ");
 		    
 		    int index = indexOfBoard(prompt.inputInt("번호?"));
 		    

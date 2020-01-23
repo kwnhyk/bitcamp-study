@@ -19,7 +19,7 @@ public class BoardDetailCommand implements Command {
 	  
 	  @Override
 	public void execute() {
-	    int index =indexOfBoard(prompt.inputInt("게시글인덱스"));
+	    int index =indexOfBoard(prompt.inputInt("게시글 번호"));
 	   
 	  
 	    if(index==-1) {
