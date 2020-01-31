@@ -1,19 +1,17 @@
 package com.eomcs.lmsst;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
 
+import com.eomcs.lmsst.context.ApplicationContextListener;
 import com.eomcs.lmsst.domain.Board;
 import com.eomcs.lmsst.domain.Lesson;
 import com.eomcs.lmsst.domain.Member;
@@ -36,21 +34,61 @@ import com.eomcs.lmsst.handler.MemberDetailCommand;
 import com.eomcs.lmsst.handler.MemberListCommand;
 import com.eomcs.lmsst.handler.MemberUpdateCommand;
 import com.eomcs.lmsst.util.Prompt;
-import com.google.gson.Gson;
 
 public class App {
-	static Scanner keyboard = new Scanner(System.in);
-	static  Deque<String> commandStack = new ArrayDeque<>();
-	static Queue<String> commandQueue = new LinkedList<>();
+	 Scanner keyboard = new Scanner(System.in);
+	  Deque<String> commandStack = new ArrayDeque<>();
+	 Queue<String> commandQueue = new LinkedList<>();
 
-	static List<Lesson> lessonList = new ArrayList<>();
-	static List<Board> boardList = new LinkedList<>();
+	
 
-	static List<Member> memberList = new LinkedList<>();
-	public static void main(String[] args) {
-		loadLessonData();
-		loadMemberData();
-		loadBoardData();
+	  // 옵저버 목록을 관리할 객체 준비
+	  // - 같은 인스턴스를 중복해서 등록하지 않도록 한다.
+	  // - Set은 등록 순서를 따지지 않는다.
+	  Set<ApplicationContextListener> listeners = new HashSet<>();
+	  
+	  //옵저버와 공유할 값을 보관할 객체를 준비한다
+	  Map<String,Object> context = new HashMap<>();
+
+	  // 옵저버를 등록하는 메서드이다.
+	  public void addApplicationContextListener(ApplicationContextListener listener) {
+	    listeners.add(listener);
+	  }
+
+	  // 옵저버를 제거하는 메서드이다.
+	  public void removeApplicationContextListener(ApplicationContextListener listener) {
+	    listeners.remove(listener);
+	  }
+
+	  // 애플리케이션이 시작되면, 등록된 리스너에게 알린다.
+	  private void notifyApplicationInitialized() {
+	    for (ApplicationContextListener listener : listeners) {
+	    	// 옵저버를 실행할 때 작업 결과를 리턴 받을 수 있도록 바구니를 넘긴다.
+	        // 물론 옵저버에게 전달할 값이 있으면 넘기기 전에 바구니에 담도록 한다.
+	        // 파라미터 Map과 같은 객체를 사용하면 이런 점에서 편하다.
+	        // 즉 파라미터로 값을 전달(IN)하고 리턴(OUT) 받을 수 있다.
+	      listener.contextInitialized(context);
+	    }
+	  }
+
+	  // 애플리케이션이 종료되면, 등록된 리스너에게 알린다.
+	  private void notifyApplicationDestroyed() {
+	    for (ApplicationContextListener listener : listeners) {
+	    	// 옵저버를 실행할 때 작업 결과를 리턴 받을 수 있도록 바구니를 넘긴다.
+	        // 물론 옵저버에게 전달할 값이 있으면 넘기기 전에 바구니에 담도록 한다.
+	        // 파라미터 Map과 같은 객체를 사용하면 이런 점에서 편하다.
+	        // 즉 파라미터로 값을 전달(IN)하고 리턴(OUT) 받을 수 있다.
+	      listener.contextDestroyed(context);
+	    }
+	  }
+	@SuppressWarnings("unchecked")
+	public void  service() {
+		 // 애플리케이션이 시작되면 등록된 옵저버를 실행한다.
+	    // 즉 DataLoaderListener를 실행한다.
+		 notifyApplicationInitialized();
+		 List<Board> boardList = (List<Board>) context.get("boardList");
+		    List<Lesson> lessonList = (List<Lesson>) context.get("lessonList");
+		    List<Member> memberList = (List<Member>) context.get("memberList");
 		Prompt prompt = new Prompt(keyboard) ;
 		/*유지보수용 공통분모 List 클래스
 		 //실제작업 X
@@ -125,10 +163,9 @@ public class App {
 
 
 		keyboard.close();
-		saveLessonData();
-		saveMemberData();
-		saveBoardData();
-	}
+		
+		 notifyApplicationDestroyed();
+	}//service()
 
 
 
@@ -137,7 +174,7 @@ public class App {
 	//이제 Stack과 Queue는 일관된 방식으로 값을 꺼내주는 Iterator가 있기 때문에
 	//두 메서드를 하나로 합칠 수 있다.
 
-	private static void printCommandHistory(Iterator<String> iterator) {
+	private  void printCommandHistory(Iterator<String> iterator) {
 		int count =0;
 		while (iterator.hasNext()) {
 			System.out.println(iterator.next());
@@ -153,174 +190,11 @@ public class App {
 			}
 		}
 	}
-	private static void loadLessonData() {
-		File file = new File("./lesson.json");
-	//	Scanner dataScan = null;
-
-		try (FileReader in = new FileReader(file)){
-			
-			lessonList.addAll(Arrays.asList(new Gson().fromJson(in,Lesson[].class)));
-			
-			
-			
-			
-			/*
-			dataScan = new Scanner(in);
-			int count = 0;
-			while(true) {
-				try {
-
-					lessonList.add(Lesson.valueOf(dataScan.nextLine()));
-					count++;
-
-				}catch(Exception e) {
-					break;
-				}
-			}
-			*/
-			System.out.printf("총 %d개의 수업 데이터를 로딩했습니다\n",lessonList.size());
-
 	
-
-
-		}catch(IOException e) {
-			System.out.println("파일 읽기 중 오류 발생!-" + e.getMessage());
-
-		
-		}
-
-	}
-	private static void saveLessonData() {
-		File file = new File("./lesson.json");
-		FileWriter out = null;
-		try {
-			out = new FileWriter(file);
-			Gson gson = new Gson();
-			String jsonData = gson.toJson(lessonList);
-			out.write(jsonData);
-			/*
-			int count = 0;
-			for(Lesson lesson : lessonList) {
-
-				out.write(lesson.toCsvString() + "\n");
-				count++;
-			}
-			*/
-			System.out.printf("총 %d개의 수업 데이터를 저장했습니다.\n",lessonList.size());
-		}catch(IOException e) {
-			System.out.println("파일 쓰기 중 오류 발생-" + e.getMessage());
-
-		}finally {
-			try {
-				out.close();
-
-			}catch(IOException e) {
-			}
-		}
-	}
-	private static void loadMemberData() {
-		File file = new File("./member.json");
-		
-
-		try (FileReader in = new FileReader(file)){
-		
-			memberList.addAll(Arrays.asList(new Gson().fromJson(in,Member[].class)));		
-		
-						/*
-			int count = 0;
-			while(true) {
-				try {
-
-
-					memberList.add(Member.valueOf(dataScan.nextLine()));
-					count++;
-
-				}catch(Exception e) {
-					break;
-				}
-
-			}
-			*/
-			System.out.printf("총 %d개의 회원 데이터를 로딩했습니다\n",memberList.size());
-
-
-
-
-		}catch(Exception e) {
-			System.out.println("파일 읽기 중 오류 발생!-" + e.getMessage());
-
-	
-		
-		}
-	}
-	private static void saveMemberData() {
-		File file = new File("./member.json");
-		FileWriter out = null;
-		try {
-			out = new FileWriter(file);
-			Gson gson = new Gson();
-			String jsonData = gson.toJson(memberList);
-			out.write(jsonData);			/*
-			int count = 0;
-			for (Member m : memberList) {
-				out.write(m.toCsvString() + "\n");
-				count++;
-			}
-			*/
-			System.out.printf("총 %d개의 회원 데이터를 저장했습니다.\n",memberList.size());
-		}catch(IOException e) {
-			System.out.println("파일 쓰기 중 오류 발생-" + e.getMessage());
-
-		}finally {
-			try {
-				out.close();
-
-			}catch(IOException e) {
-			}
-		}
-	}
-	private static void loadBoardData() {
-		File file = new File("./board.json");
-
-		try (FileReader in = new FileReader(file)){
-			boardList.addAll(Arrays.asList(new Gson().fromJson(in, Board[].class)));
-				
-					
-				
-				
-			
-			System.out.printf("총 %d개의 게시물 데이터를 로딩했습니다\n",boardList.size());
-
-
-
-
-		}catch(Exception e) {
-			System.out.println("파일 읽기 중 오류 발생!-" + e.getMessage());
-
-		}
-		}
-
-	
-	private static void saveBoardData() {
-		File file = new File("./board.json");
-		FileWriter out = null;
-		try {
-			out = new FileWriter(file);
-			Gson gson = new Gson();
-			String jsonData = gson.toJson(boardList);
-			out.write(jsonData);
-			
-			System.out.printf("총 %d개의 게시물 데이터를 저장했습니다.\n",boardList.size());
-		}catch(IOException e) {
-			System.out.println("파일 쓰기 중 오류 발생-" + e.getMessage());
-
-		}finally {
-			try {
-				out.close();
-
-			}catch(IOException e) {
-			}
-		}
+	public static void main(String[] args) {
+		App app = new App();
+		app.addApplicationContextListener(new DataLoaderListener());
+		app.service();
 	}
 }
 
