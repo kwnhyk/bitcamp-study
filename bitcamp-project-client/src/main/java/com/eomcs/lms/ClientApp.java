@@ -4,6 +4,8 @@ package com.eomcs.lms;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -12,10 +14,13 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
-import com.eomcs.lms.dao.proxy.BoardDaoProxy;
+import com.eomcs.lms.dao.BoardDao;
+import com.eomcs.lms.dao.LessonDao;
+import com.eomcs.lms.dao.MemberDao;
+import com.eomcs.lms.dao.mariadb.BoardDaoImpl;
+import com.eomcs.lms.dao.mariadb.LessonDaoImpl;
+import com.eomcs.lms.dao.mariadb.MemberDaoImpl;
 import com.eomcs.lms.dao.proxy.DaoProxyHelper;
-import com.eomcs.lms.dao.proxy.LessonDaoProxy;
-import com.eomcs.lms.dao.proxy.MemberDaoProxy;
 import com.eomcs.lms.handler.BoardAddCommand;
 import com.eomcs.lms.handler.BoardDeleteCommand;
 import com.eomcs.lms.handler.BoardDetailCommand;
@@ -41,7 +46,7 @@ public class ClientApp {
 
   Deque<String> commandStack;
   Queue<String> commandQueue;
-
+  Connection con;
   String host;
   int port;
 
@@ -69,10 +74,15 @@ public class ClientApp {
     DaoProxyHelper daoProxyHelper = new DaoProxyHelper(host, port);
 
     // DAO 프록시 객체 준비
-    BoardDaoProxy boardDao = new BoardDaoProxy(daoProxyHelper);
-    LessonDaoProxy lessonDao = new LessonDaoProxy(daoProxyHelper);
-    MemberDaoProxy memberDao = new MemberDaoProxy(daoProxyHelper);
-
+    //BoardDaoProxy boardDao = new BoardDaoProxy(daoProxyHelper);
+ //   LessonDaoProxy lessonDao = new LessonDaoProxy(daoProxyHelper);
+   // MemberDaoProxy memberDao = new MemberDaoProxy(daoProxyHelper);
+    Class.forName("org.mariadb.jdbc.Driver");
+    con = DriverManager.getConnection( //
+        "jdbc:mariadb://localhost:3306/studydb", "study", "1111");
+    BoardDao boardDao = new BoardDaoImpl();
+    MemberDao memberDao = new MemberDaoImpl();
+    LessonDao lessonDao = new LessonDaoImpl();
     // 사용자 명령을 처리할 Command 객체 준비
     commandMap.put("/board/list", new BoardListCommand(boardDao));
     commandMap.put("/board/add", new BoardAddCommand(boardDao, prompt));
