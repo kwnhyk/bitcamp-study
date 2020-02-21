@@ -6,11 +6,15 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.domain.Board;
 
 public class BoardDaoImpl implements BoardDao {
-
+		Connection con;
+	public BoardDaoImpl(Connection con) {
+	this.con = con;
+}
   @Override
   public int insert(Board board) throws Exception {
     Class.forName("org.mariadb.jdbc.Driver");
@@ -45,7 +49,7 @@ public class BoardDaoImpl implements BoardDao {
 
         // MariaDB의 lms_board 테이블에 있는 데이터를 가져올 도구를 준비
         ResultSet rs = stmt.executeQuery( //
-            "select board_id, conts, cdt, vw_cnt from lms_board")) {
+            "select board_id, conts, cdt, vw_cnt from lms_board  order by board_id desc")) {
 
       ArrayList<Board> list = new ArrayList<>();
 

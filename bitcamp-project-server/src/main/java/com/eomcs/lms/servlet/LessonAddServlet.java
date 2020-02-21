@@ -1,7 +1,8 @@
 package com.eomcs.lms.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.sql.Date;
+import java.util.Scanner;
 
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.domain.Lesson;
@@ -16,24 +17,34 @@ public class LessonAddServlet implements Servlet {
 	}
 	
 	@Override
-	public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
+	public void service(Scanner in, PrintStream out) throws Exception {
 	  
-	        Lesson lesson = (Lesson) in.readObject();
-
+	     
+		 Lesson lesson = new Lesson();
+		 
+	       out.println("수업명?\n!{}!");
+	       lesson.setTitle(in.nextLine());
 	       
+	       out.println("설명?\n!{}!");
+	       
+	        lesson.setDescription(in.nextLine());
+	        out.println("시작일?\n!{}!");
+	        lesson.setStartDate(Date.valueOf(in.nextLine()));
+	        out.println("종료일?\n!{}!");
+	        lesson.setEndDate(Date.valueOf(in.nextLine()));
+	        out.println("총수업시간?\n!{}!");
+	        lesson.setTotalHours(Integer.parseInt(in.nextLine()));
+	        out.println("일수업시간?\n!{}!");
+	        lesson.setDayHours(Integer.parseInt(in.nextLine()));
 
 	        if (lessonDao.insert(lesson) >0) {
-	          out.writeUTF("OK");
+	          out.println("등록");
 
 	        } else {
-	          out.writeUTF("FAIL");
-	          out.writeUTF("같은 번호의 수업이 있습니다.");
-	        }
-
-
-	     
+	          out.println("실패");
 	    }
 	
 
 	
+}
 }

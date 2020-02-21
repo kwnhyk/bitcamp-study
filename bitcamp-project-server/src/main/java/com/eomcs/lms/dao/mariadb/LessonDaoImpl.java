@@ -83,7 +83,7 @@ public class LessonDaoImpl implements LessonDao {
 		try(Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery(
 				"select lesson_id, titl,conts,sdt,edt,tot_hr,day_hr"
-				+ " from lms_lesson" + "where lesson_id="+ no)){
+				+"from lms_lesson" + "where lesson_id="+ no)){
 		if(rs.next()) {
 			Lesson lesson = new Lesson();
 			lesson.setNo(rs.getInt("lesson_id"));
