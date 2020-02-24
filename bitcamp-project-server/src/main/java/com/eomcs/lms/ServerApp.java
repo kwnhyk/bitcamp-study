@@ -2,7 +2,6 @@
 package com.eomcs.lms;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,6 +17,7 @@ import com.eomcs.lms.context.ApplicationContextListener;
 import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.dao.MemberDao;
+import com.eomcs.lms.dao.PhotoBoardDao;
 import com.eomcs.lms.servlet.BoardAddServlet;
 import com.eomcs.lms.servlet.BoardDeleteServlet;
 import com.eomcs.lms.servlet.BoardDetailServlet;
@@ -28,6 +28,16 @@ import com.eomcs.lms.servlet.LessonDeleteServlet;
 import com.eomcs.lms.servlet.LessonDetailServlet;
 import com.eomcs.lms.servlet.LessonListServlet;
 import com.eomcs.lms.servlet.LessonUpdateServlet;
+import com.eomcs.lms.servlet.MemberAddServlet;
+import com.eomcs.lms.servlet.MemberDeleteServlet;
+import com.eomcs.lms.servlet.MemberDetailServlet;
+import com.eomcs.lms.servlet.MemberListServlet;
+import com.eomcs.lms.servlet.MemberSearchServlet;
+import com.eomcs.lms.servlet.MemberUpdateServlet;
+import com.eomcs.lms.servlet.PhotoBoardAddServlet;
+import com.eomcs.lms.servlet.PhotoBoardDetailServlet;
+import com.eomcs.lms.servlet.PhotoBoardListServlet;
+import com.eomcs.lms.servlet.PhotoBoardUpdateServlet;
 import com.eomcs.lms.servlet.Servlet;
 
 public class ServerApp {
@@ -41,6 +51,7 @@ public class ServerApp {
 
   // 스레드 풀
   ExecutorService executorService = Executors.newCachedThreadPool();
+  boolean serverStop = false;
 
   public void addApplicationContextListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -71,6 +82,7 @@ public class ServerApp {
     BoardDao boardDao = (BoardDao) context.get("boardDao");
     LessonDao lessonDao = (LessonDao) context.get("lessonDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");
+    PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
 
     // 커맨드 객체 역할을 수행하는 서블릿 객체를 맵에 보관한다.
     servletMap.put("/board/list", new BoardListServlet(boardDao));
@@ -84,21 +96,36 @@ public class ServerApp {
     servletMap.put("/lesson/detail", new LessonDetailServlet(lessonDao));
     servletMap.put("/lesson/update", new LessonUpdateServlet(lessonDao));
      servletMap.put("/lesson/delete", new LessonDeleteServlet(lessonDao));
-    //
-    // servletMap.put("/member/list", new MemberListServlet(memberDao));
-    // servletMap.put("/member/add", new MemberAddServlet(memberDao));
-    // servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
-    // servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
-    // servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
-
-    try (ServerSocket serverSocket = new ServerSocket(9999)) {
+     servletMap.put("/member/search", new MemberSearchServlet(memberDao));
+     servletMap.put("/member/list", new MemberListServlet(memberDao));
+     servletMap.put("/member/add", new MemberAddServlet(memberDao));
+     servletMap.put("/member/detail", new MemberDetailServlet(memberDao));
+     servletMap.put("/member/update", new MemberUpdateServlet(memberDao));
+     servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
+     servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao,lessonDao));
+     servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet( //
+    	        photoBoardDao));
+     servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet( //
+ 	        photoBoardDao));
+     servletMap.put("/photoboard/add", new PhotoBoardAddServlet( //
+ 	        photoBoardDao));
+     
+     
+     
+     
+     
+     try (ServerSocket serverSocket = new ServerSocket(9999)) {
 
       System.out.println("클라이언트 연결 대기중...");
 
       while (true) {
         Socket socket = serverSocket.accept();
         System.out.println("클라이언트와 연결되었음!");
-
+        
+        if(serverStop) {
+        	break;
+        	
+        }
         executorService.submit(() -> {
           processRequest(socket);
           System.out.println("--------------------------------------");
@@ -109,17 +136,32 @@ public class ServerApp {
       System.out.println("서버 준비 중 오류 발생!");
     }
 
-    notifyApplicationDestroyed();
 
     // 스레드풀을 다 사용했으면 종료하라고 해야 한다.
     executorService.shutdown();
     // => 스레드풀을 당장 종료시키는 것이 아니다.
     // => 스레드풀에 소속된 스레드들의 작업이 모두 끝나면 종료하는 뜻이다.
-
+    //클라이언트 요청을 처리하는 스레드가 모두 종료된 후에 
+    //DB커넥션을 닫도록 한다
+    //모든 스레드가 끝날 때까지 DB커넥션을 종료하고 싶지 않다면
+    //스레드가 끝났는지 검사하며 기다려야 한다
+    
+    while(true) {
+    	if(executorService.isTerminated()) {
+    		break;
+    	}
+    	try {
+    	Thread.sleep(500);
+    }catch(Exception e) {
+    	e.printStackTrace();
+    }
+    }
+    notifyApplicationDestroyed();
+    System.out.println("서버 종료");
   } // service()
 
 
-  int processRequest(Socket clientSocket) {
+  void processRequest(Socket clientSocket) {
 
     try (Socket socket = clientSocket;
         Scanner in = new Scanner(socket.getInputStream());
@@ -128,6 +170,11 @@ public class ServerApp {
       // 클라이언트가 보낸 명령을 읽는다.
       String request = in.nextLine();
       System.out.printf("=> %s\n", request);
+      
+      if(request.equalsIgnoreCase("/server/stop")) {
+    	  quit(out);
+    	  return;
+      }
 
       // 클라이언트에게 응답한다.
       // if (request.equalsIgnoreCase("/server/stop")) {
@@ -159,12 +206,12 @@ public class ServerApp {
       out.flush();
       System.out.println("클라이언트에게 응답하였음!");
 
-      return 0;
+    
 
     } catch (Exception e) {
       System.out.println("예외 발생:");
       e.printStackTrace();
-      return -1;
+     
     }
   }
 
@@ -172,8 +219,10 @@ public class ServerApp {
     out.println("요청한 명령을 처리할 수 없습니다.");
   }
 
-  private void quit(ObjectOutputStream out) throws IOException {
-    out.writeUTF("OK");
+  private void quit(PrintStream out) throws IOException {
+	  serverStop = true;
+    out.println("OK");
+    out.println("!end!");
     out.flush();
   }
 

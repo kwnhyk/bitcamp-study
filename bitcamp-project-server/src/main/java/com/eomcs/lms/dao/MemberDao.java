@@ -11,7 +11,9 @@ public interface MemberDao {
 	  //서블릿 객체들이 데이터를 다룰때 사용할 메서드를 정의한다.
 	  public int insert(Member member) throws Exception ;
 		
-
+	  default List<Member> findByKeyword(String keyword) throws Exception {
+		    return null;
+		  }
 	 
 	
 		  
