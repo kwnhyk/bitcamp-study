@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.domain.Board;
+import com.eomcs.lms.util.Prompt;
 
 public class BoardUpdateServlet implements Servlet {
 
@@ -19,16 +20,17 @@ public class BoardUpdateServlet implements Servlet {
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
 	    
-	        out.println("번호?\n!{}!");
-	        int no = Integer.parseInt(in.nextLine());
+	        int no = Prompt.getInt(in, out, "번호");
 	        Board old = boardDao.findByNo(no);
 	        if(old == null) {
 	        	out.println("해당 번호의 게시글이 없습니다");
 	        	return;
 	        }
-	        out.printf("제목(%s)?\n!{}!\n",old.getTitle()) ;
+	      
 	        Board board = new Board();
-	        board.setTitle(in.nextLine());
+	        board.setTitle(Prompt.getString(in, out,
+	        		String.format("제목(%s)?\n!{}!\n",old.getTitle(),
+	        				old.getTitle())));
 	        board.setNo(no);
 	       
 	        

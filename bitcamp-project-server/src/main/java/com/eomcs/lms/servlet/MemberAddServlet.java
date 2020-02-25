@@ -1,10 +1,11 @@
 package com.eomcs.lms.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 import com.eomcs.lms.dao.MemberDao;
 import com.eomcs.lms.domain.Member;
+import com.eomcs.lms.util.Prompt;
 
 public class MemberAddServlet implements Servlet {
 
@@ -17,21 +18,26 @@ public class MemberAddServlet implements Servlet {
 	}
 	
 	@Override
-	public void service(ObjectInputStream in, ObjectOutputStream out) throws Exception {
+	public void service(Scanner in, PrintStream out) throws Exception {
 	   
-	        Member member = (Member) in.readObject();
+		  Member member = new Member();
 
+		    member.setName(Prompt.getString(in, out, "이름?"));
 
-	        if (memberDao.insert(member)>0) {
-	          out.writeUTF("OK");
+		    member.setEmail(Prompt.getString(in, out, "이메일?"));
 
-	        } else {
-	          out.writeUTF("FAIL");
-	          out.writeUTF("같은 번호의 회원이 있습니다.");
-	        }
+		    member.setPassword(Prompt.getString(in, out, "암호?"));
 
+		    member.setPhoto(Prompt.getString(in, out, "사진?"));
+		    member.setTel(Prompt.getString(in, out, "전화?"));
 
-	    }
+		    if (memberDao.insert(member) > 0) {
+		      out.println("회원을 저장했습니다.");
+
+		    } else {
+		      out.println("저장에 실패했습니다.");
+		    }
+		  }
 	
 
 	

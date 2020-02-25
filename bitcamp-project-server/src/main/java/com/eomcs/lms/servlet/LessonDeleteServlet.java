@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 import com.eomcs.lms.dao.LessonDao;
+import com.eomcs.lms.util.Prompt;
 
 public class LessonDeleteServlet implements Servlet {
 
@@ -21,10 +22,7 @@ public class LessonDeleteServlet implements Servlet {
 	       
 
 
-	out.println("번호? ");
-    out.println("!{}!");
-    out.flush();
-    int no = Integer.parseInt(in.nextLine());
+    int no = Prompt.getInt(in, out, "번호");
 
     if (lessonDao.delete(no) > 0) { // 삭제했다면,
       out.println("강의를 삭제했습니다.");

@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.domain.Lesson;
+import com.eomcs.lms.util.Prompt;
 
 public class LessonDetailServlet implements Servlet {
 
@@ -18,10 +19,8 @@ public class LessonDetailServlet implements Servlet {
 	}
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-		 out.println("번호? ");
-		    out.println("!{}!");
-		    out.flush();
-	        int no =Integer.parseInt(in.nextLine());
+		
+	        int no =Prompt.getInt(in, out, "번호?");
 	        Lesson lesson = lessonDao.findByNo(no);
 	        if (lesson != null) {
 	        	 out.printf("번호: %d\n", lesson.getNo());

@@ -18,6 +18,7 @@ import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.dao.MemberDao;
 import com.eomcs.lms.dao.PhotoBoardDao;
+import com.eomcs.lms.dao.PhotoFileDao;
 import com.eomcs.lms.servlet.BoardAddServlet;
 import com.eomcs.lms.servlet.BoardDeleteServlet;
 import com.eomcs.lms.servlet.BoardDetailServlet;
@@ -35,6 +36,7 @@ import com.eomcs.lms.servlet.MemberListServlet;
 import com.eomcs.lms.servlet.MemberSearchServlet;
 import com.eomcs.lms.servlet.MemberUpdateServlet;
 import com.eomcs.lms.servlet.PhotoBoardAddServlet;
+import com.eomcs.lms.servlet.PhotoBoardDeleteServlet;
 import com.eomcs.lms.servlet.PhotoBoardDetailServlet;
 import com.eomcs.lms.servlet.PhotoBoardListServlet;
 import com.eomcs.lms.servlet.PhotoBoardUpdateServlet;
@@ -83,7 +85,7 @@ public class ServerApp {
     LessonDao lessonDao = (LessonDao) context.get("lessonDao");
     MemberDao memberDao = (MemberDao) context.get("memberDao");
     PhotoBoardDao photoBoardDao = (PhotoBoardDao) context.get("photoBoardDao");
-
+    PhotoFileDao photoFileDao = (PhotoFileDao) context.get("photoFileDao");
     // 커맨드 객체 역할을 수행하는 서블릿 객체를 맵에 보관한다.
     servletMap.put("/board/list", new BoardListServlet(boardDao));
      servletMap.put("/board/add", new BoardAddServlet(boardDao));
@@ -104,12 +106,14 @@ public class ServerApp {
      servletMap.put("/member/delete", new MemberDeleteServlet(memberDao));
      servletMap.put("/photoboard/list", new PhotoBoardListServlet(photoBoardDao,lessonDao));
      servletMap.put("/photoboard/detail", new PhotoBoardDetailServlet( //
-    	        photoBoardDao));
+    	        photoBoardDao,photoFileDao));
      servletMap.put("/photoboard/update", new PhotoBoardUpdateServlet( //
- 	        photoBoardDao));
+ 	        photoBoardDao,photoFileDao));
      servletMap.put("/photoboard/add", new PhotoBoardAddServlet( //
- 	        photoBoardDao));
+ 	        photoBoardDao,lessonDao,photoFileDao));
      
+     servletMap.put("/photoboard/delete", new PhotoBoardDeleteServlet( //
+  	        photoBoardDao,photoFileDao));
      
      
      

@@ -16,7 +16,7 @@ public class DataLoaderListener implements ApplicationContextListener {
 
   //List<Lesson> lessonList = new ArrayList<>();
  // List<Member> memberList = new ArrayList<>();
-	Connection con;
+	public static Connection con;
   @Override
   public void contextInitialized(Map<String, Object> context) {
   

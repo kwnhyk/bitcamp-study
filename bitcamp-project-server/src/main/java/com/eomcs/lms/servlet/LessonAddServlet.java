@@ -1,11 +1,11 @@
 package com.eomcs.lms.servlet;
 
 import java.io.PrintStream;
-import java.sql.Date;
 import java.util.Scanner;
 
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.domain.Lesson;
+import com.eomcs.lms.util.Prompt;
 
 public class LessonAddServlet implements Servlet {
 
@@ -22,20 +22,13 @@ public class LessonAddServlet implements Servlet {
 	     
 		 Lesson lesson = new Lesson();
 		 
-	       out.println("수업명?\n!{}!");
-	       lesson.setTitle(in.nextLine());
+	       lesson.setTitle(Prompt.getString(in, out, "수업명?"));
 	       
-	       out.println("설명?\n!{}!");
-	       
-	        lesson.setDescription(in.nextLine());
-	        out.println("시작일?\n!{}!");
-	        lesson.setStartDate(Date.valueOf(in.nextLine()));
-	        out.println("종료일?\n!{}!");
-	        lesson.setEndDate(Date.valueOf(in.nextLine()));
-	        out.println("총수업시간?\n!{}!");
-	        lesson.setTotalHours(Integer.parseInt(in.nextLine()));
-	        out.println("일수업시간?\n!{}!");
-	        lesson.setDayHours(Integer.parseInt(in.nextLine()));
+	        lesson.setDescription(Prompt.getString(in, out, "설명?"));
+	        lesson.setStartDate(Prompt.getDate(in, out, "시작일?"));
+	        lesson.setEndDate(Prompt.getDate(in, out, "종료일?"));
+	        lesson.setTotalHours(Prompt.getInt(in, out, "총수업시간?"));
+	        lesson.setDayHours(Prompt.getInt(in, out, "일수업시간?"));
 
 	        if (lessonDao.insert(lesson) >0) {
 	          out.println("등록");

@@ -8,6 +8,7 @@ import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.dao.PhotoBoardDao;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.domain.PhotoBoard;
+import com.eomcs.lms.util.Prompt;
 
 public class PhotoBoardListServlet implements Servlet {
 
@@ -23,11 +24,9 @@ PhotoBoardDao photoBoardDao;
 	
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
-		out.println("수업번호?");
-		out.println("!{}!");
-		out.flush();
 		
-		int lessonNo = Integer.parseInt(in.nextLine());
+		
+		int lessonNo = Prompt.getInt(in, out, "수업번호?");
 		Lesson lesson = lessonDao.findByNo(lessonNo);
 		
 		if(lesson == null) {
