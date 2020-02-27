@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 import com.eomcs.lms.dao.BoardDao;
+import com.eomcs.util.Prompt;
 
 public class BoardDeleteServlet implements Servlet {
 
@@ -17,9 +18,8 @@ public class BoardDeleteServlet implements Servlet {
 	@Override
 	public void service(Scanner in, PrintStream out) throws Exception {
 	    
-	        out.println("번호?\n!{}!");
-	        out.flush();
-	        int no = Integer.parseInt(in.nextLine());
+	       
+	        int no = Prompt.getInt(in, out, "번호?");
 	       
 	    
 

@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.domain.Lesson;
-import com.eomcs.lms.util.Prompt;
+import com.eomcs.util.Prompt;
 
 public class LessonUpdateServlet implements Servlet {
 

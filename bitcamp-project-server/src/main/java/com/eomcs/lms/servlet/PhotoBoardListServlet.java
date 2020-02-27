@@ -8,7 +8,7 @@ import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.dao.PhotoBoardDao;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.domain.PhotoBoard;
-import com.eomcs.lms.util.Prompt;
+import com.eomcs.util.Prompt;
 
 public class PhotoBoardListServlet implements Servlet {
 

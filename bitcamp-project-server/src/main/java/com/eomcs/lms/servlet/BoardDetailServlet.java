@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.domain.Board;
-import com.eomcs.lms.util.Prompt;
+import com.eomcs.util.Prompt;
 
 public class BoardDetailServlet implements Servlet {
 

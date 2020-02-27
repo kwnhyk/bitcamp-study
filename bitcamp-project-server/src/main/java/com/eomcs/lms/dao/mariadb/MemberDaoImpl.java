@@ -1,157 +1,165 @@
 package com.eomcs.lms.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.eomcs.lms.dao.MemberDao;
 import com.eomcs.lms.domain.Member;
+import com.eomcs.sql.DataSource;
 
-public class MemberDaoImpl implements MemberDao{
+public class MemberDaoImpl implements MemberDao {
 
-	
+  DataSource dataSource;
 
-	Connection con;
-	public MemberDaoImpl(Connection con) {
-		this.con = con;
-	
-	}
-	@Override
-	public int insert(Member member) throws Exception {
-		 Class.forName("org.mariadb.jdbc.Driver");
+  public MemberDaoImpl(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
-		    try (Connection con = DriverManager.getConnection( //
-		        "jdbc:mariadb://localhost:3306/studydb", "study", "1111");
-		        Statement stmt = con.createStatement()) {
+  @Override
+  public int insert(Member member) throws Exception {
+    try (Connection con = dataSource.getConnection(); //
+        PreparedStatement stmt = con.prepareStatement(//
+            "insert into lms_member(name, email, pwd, tel, photo) "//
+                + "values(?,?,password(?),?,?)")) {
+      stmt.setString(1, member.getName());
+      stmt.setString(2, member.getEmail());
+      stmt.setString(3, member.getPassword());
+      stmt.setString(4, member.getTel());
+      stmt.setString(5, member.getPhoto());
+      return stmt.executeUpdate();
+    }
+  }
 
-		      int result = stmt.executeUpdate("insert into lms_member(name, email, pwd, tel, photo) "
-		          + "values('" + member.getName() 
-		          + "', '" + member.getEmail() 
-		          + "', '"+ member.getPassword()
-		          + "', '" + member.getTel() 
-		          + "', '" + member.getPhoto() + "')");
+  @Override
+  public List<Member> findAll() throws Exception {
+    try (Connection con = dataSource.getConnection(); //
+        PreparedStatement stmt = con.prepareStatement(//
+            "select member_id, name, email, tel, cdt"//
+                + " from lms_member");
+        ResultSet rs = stmt.executeQuery()) {
+      ArrayList<Member> list = new ArrayList<>();
+      while (rs.next()) {
+        Member member = new Member();
+        member.setNo(rs.getInt("member_id"));
+        member.setName(rs.getString("name"));
+        member.setEmail(rs.getString("email"));
+        member.setTel(rs.getString("tel"));
+        member.setRegisteredDate(rs.getDate("cdt"));
+        list.add(member);
+      }
+      return list;
+    }
+  }
 
-		      return result;
-		    }
-		    
-	}
+  @Override
+  public Member findByNo(int no) throws Exception {
+    try (Connection con = dataSource.getConnection(); //
+        PreparedStatement stmt = con.prepareStatement(//
+            "select member_id, name, email, pwd, tel, photo" //
+                + " from lms_member" //
+                + " where member_id=?")) {
+      stmt.setInt(1, no);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          Member member = new Member();
+          member.setNo(rs.getInt("member_id"));
+          member.setName(rs.getString("name"));
+          member.setEmail(rs.getString("email"));
+          member.setPassword(rs.getString("pwd"));
+          member.setTel(rs.getString("tel"));
+          member.setPhoto(rs.getString("photo"));
+          return member;
+        } else {
+          return null;
+        }
+      }
+    }
+  }
 
-	@Override
-	public List<Member> findAll() throws Exception {
-		  Class.forName("org.mariadb.jdbc.Driver");
+  @Override
+  public int update(Member member) throws Exception {
+    try (Connection con = dataSource.getConnection(); //
+        PreparedStatement stmt = con.prepareStatement(//
+            "update lms_member set" //
+                + " name=?, email=?, pwd=password(?), tel=?, photo=?"//
+                + " where member_id=?")) {
+      stmt.setString(1, member.getName());
+      stmt.setString(2, member.getEmail());
+      stmt.setString(3, member.getPassword());
+      stmt.setString(4, member.getTel());
+      stmt.setString(5, member.getPhoto());
+      stmt.setInt(6, member.getNo());
+      return stmt.executeUpdate();
+    }
+  }
 
-		    try (Connection con = DriverManager.getConnection( //
-		        "jdbc:mariadb://localhost:3306/studydb", "study", "1111");
-		        Statement stmt = con.createStatement();
-		        ResultSet rs = stmt.executeQuery( //
-		            "select member_id, name, email, tel, cdt from lms_member")) {
+  @Override
+  public int delete(int no) throws Exception {
+    try (Connection con = dataSource.getConnection(); //
+        PreparedStatement stmt = con.prepareStatement(//
+            "delete from lms_member"//
+                + " where member_id=?")) {
+      stmt.setInt(1, no);
+      return stmt.executeUpdate();
+    }
+  }
 
-		      ArrayList<Member> list = new ArrayList<>();
+  @Override
+  public List<Member> findByKeyword(String keyword) throws Exception {
+    try (Connection con = dataSource.getConnection(); //
+        PreparedStatement stmt = con.prepareStatement(//
+            "select member_id, name, email, tel, cdt" //
+                + " from lms_member" //
+                + " where name like ?"//
+                + " or email like ?"//
+                + " or tel like ?")) {
+      String value = "%" + keyword + "%";
+      stmt.setString(1, value);
+      stmt.setString(2, value);
+      stmt.setString(3, value);
 
-		      while (rs.next()) {
-		        Member member = new Member();
+      try (ResultSet rs = stmt.executeQuery()) {
+        ArrayList<Member> list = new ArrayList<>();
+        while (rs.next()) {
+          Member member = new Member();
+          member.setNo(rs.getInt("member_id"));
+          member.setName(rs.getString("name"));
+          member.setEmail(rs.getString("email"));
+          member.setTel(rs.getString("tel"));
+          member.setRegisteredDate(rs.getDate("cdt"));
+          list.add(member);
+        }
+        return list;
+      }
+    }
+  }
 
-		        member.setNo(rs.getInt("member_id"));
-		        member.setName(rs.getString("name"));
-		        member.setEmail(rs.getString("email"));
-		        member.setTel(rs.getString("tel"));
-		        member.setRegisteredDate(rs.getDate("cdt"));
-
-		        list.add(member);
-		      }
-
-		      return list;
-		    }
-	}
-	
-
-	@Override
-	public Member findByNo(int no) throws Exception {
-		 Class.forName("org.mariadb.jdbc.Driver");
-
-		    try (Connection con = DriverManager.getConnection( //
-		        "jdbc:mariadb://localhost:3306/studydb", "study", "1111");
-		        Statement stmt = con.createStatement();
-		        ResultSet rs = stmt.executeQuery( //
-		            "select member_id, name, email, pwd, tel, photo" + " from lms_member"
-		                + " where member_id=" + no)) {
-
-		      if (rs.next()) {
-		        Member member = new Member();
-		        member.setNo(rs.getInt("member_id"));
-		        member.setName(rs.getString("name"));
-		        member.setEmail(rs.getString("email"));
-		        member.setPassword(rs.getString("pwd"));
-		        member.setTel(rs.getString("tel"));
-		        member.setPhoto(rs.getString("photo"));
-		        return member;
-
-		      } else {
-		        return null;
-		      }
-		    }
-	}
-
-	@Override
-	public int update(Member member) throws Exception {
-		  Class.forName("org.mariadb.jdbc.Driver");
-
-		    try (Connection con = DriverManager.getConnection( //
-		        "jdbc:mariadb://localhost:3306/studydb", "study", "1111");
-		        Statement stmt = con.createStatement()) {
-
-		      int result =
-		          stmt.executeUpdate("update lms_member set name= '" + member.getName() + "', email='"
-		              + member.getEmail() + "', pwd='" + member.getPassword() + "', tel='" + member.getTel()
-		              + "', photo='" + member.getPhoto() + "' where member_id=" + member.getNo());
-
-		      return result;
-		    }
-	}
-
-	@Override
-	public int delete(int no) throws Exception {
-		  Class.forName("org.mariadb.jdbc.Driver");
-
-		    try (Connection con = DriverManager.getConnection( //
-		        "jdbc:mariadb://localhost:3306/studydb", "study", "1111");
-		        Statement stmt = con.createStatement()) {
-
-		      int result = stmt.executeUpdate("delete from lms_member where member_id=" + no);
-
-		      return result;
-		    }
-		  }
-	
-	 @Override
-	  public List<Member> findByKeyword(String keyword) throws Exception {
-	    try (Statement stmt = con.createStatement();
-	        ResultSet rs = stmt.executeQuery( //
-	            "select member_id, name, email, tel, cdt" //
-	                + " from lms_member" //
-	                + " where name like '%" + keyword //
-	                + "%' or email like '%" + keyword //
-	                + "%' or tel like '%" + keyword + "%'")) {
-
-	      ArrayList<Member> list = new ArrayList<>();
-
-	      while (rs.next()) {
-	        Member member = new Member();
-
-	        member.setNo(rs.getInt("member_id"));
-	        member.setName(rs.getString("name"));
-	        member.setEmail(rs.getString("email"));
-	        member.setTel(rs.getString("tel"));
-	        member.setRegisteredDate(rs.getDate("cdt"));
-
-	        list.add(member);
-	      }
-
-	      return list;
-	    }
-	  }
-
+  @Override
+  public Member findByEmailAndPassword(String email, String password) throws Exception {
+    try (Connection con = dataSource.getConnection(); //
+        PreparedStatement stmt = con.prepareStatement(//
+            "select member_id, name, email, pwd, tel, photo" //
+                + " from lms_member" //
+                + " where email=? and pwd=password(?)")) {
+      stmt.setString(1, email);
+      stmt.setString(2, password);
+      try (ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+          Member member = new Member();
+          member.setNo(rs.getInt("member_id"));
+          member.setName(rs.getString("name"));
+          member.setEmail(rs.getString("email"));
+          member.setPassword(rs.getString("pwd"));
+          member.setTel(rs.getString("tel"));
+          member.setPhoto(rs.getString("photo"));
+          return member;
+        } else {
+          return null;
+        }
+      }
+    }
+  }
 }

@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 import com.eomcs.lms.dao.MemberDao;
-import com.eomcs.lms.util.Prompt;
+import com.eomcs.util.Prompt;
 
 public class MemberDeleteServlet implements Servlet {
 	 MemberDao memberDao;
