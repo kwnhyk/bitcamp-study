@@ -23,7 +23,9 @@ repositories {
 
 dependencies {
     // This dependency is used by the application.
+    implementation 'org.mybatis:mybatis:3.5.4'
     implementation 'com.google.guava:guava:28.0-jre'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.5.4'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
